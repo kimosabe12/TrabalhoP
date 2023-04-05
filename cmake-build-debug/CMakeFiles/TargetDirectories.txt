@@ -1,0 +1,3 @@
+C:/Users/diogo/Desktop/faculdade 3 ano/Segundo Semestre/Programacao/TrabalhoP/cmake-build-debug/CMakeFiles/TrabalhoP.dir
+C:/Users/diogo/Desktop/faculdade 3 ano/Segundo Semestre/Programacao/TrabalhoP/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/diogo/Desktop/faculdade 3 ano/Segundo Semestre/Programacao/TrabalhoP/cmake-build-debug/CMakeFiles/rebuild_cache.dir

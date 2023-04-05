@@ -1,0 +1,23 @@
+# ninja log v5
+3	132	7023365265864557	CMakeFiles/TrabalhoP.dir/main.c.obj	660670210e812b28
+2	120	7023504338977788	CMakeFiles/TrabalhoP.dir/Paragens.c.obj	37b8845ebc16b428
+121	266	7023504340372480	TrabalhoP.exe	11e46e40b1267bc6
+23	115	7023533897821302	CMakeFiles/TrabalhoP.dir/gestao_linhas.c.obj	4fe30cff94377a01
+14	118	7023533897841243	CMakeFiles/TrabalhoP.dir/Paragens.c.obj	37b8845ebc16b428
+2	119	7023533897841243	CMakeFiles/TrabalhoP.dir/main.c.obj	660670210e812b28
+119	248	7023533899097870	TrabalhoP.exe	4964824c0e744e8f
+2	90	7023536118966925	CMakeFiles/TrabalhoP.dir/Paragens.c.obj	37b8845ebc16b428
+90	204	7023536120065988	TrabalhoP.exe	4964824c0e744e8f
+3	107	7023546090722750	CMakeFiles/TrabalhoP.dir/main.c.obj	660670210e812b28
+13	108	7023546090732726	CMakeFiles/TrabalhoP.dir/Paragens.c.obj	37b8845ebc16b428
+20	111	7023546090772612	CMakeFiles/TrabalhoP.dir/gestao_linhas.c.obj	4fe30cff94377a01
+111	231	7023546091935980	TrabalhoP.exe	4964824c0e744e8f
+2	97	7023549980125961	CMakeFiles/TrabalhoP.dir/main.c.obj	660670210e812b28
+12	98	7023549980125961	CMakeFiles/TrabalhoP.dir/gestao_linhas.c.obj	4fe30cff94377a01
+98	220	7023549981294983	TrabalhoP.exe	4964824c0e744e8f
+3	106	7023556845325400	CMakeFiles/TrabalhoP.dir/main.c.obj	660670210e812b28
+13	108	7023556845335658	CMakeFiles/TrabalhoP.dir/Paragens.c.obj	37b8845ebc16b428
+20	108	7023556845335658	CMakeFiles/TrabalhoP.dir/gestao_linhas.c.obj	4fe30cff94377a01
+108	231	7023556846524159	TrabalhoP.exe	4964824c0e744e8f
+3	269	7023865649200331	CMakeFiles/TrabalhoP.dir/main.c.obj	660670210e812b28
+269	471	7023865651167993	TrabalhoP.exe	4964824c0e744e8f
