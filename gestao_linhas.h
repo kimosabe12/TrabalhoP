@@ -8,7 +8,7 @@ typedef struct linha Linha;
 struct linha {
     char nome[50];
     int n_paragens;
-    Paragem* paragens;
+    Paragem** paragens;
     Linha* prox;
 };
 void adicionar_linha(Linha** linhas, int* n_linhas, Paragem* paragens, int n_paragens);

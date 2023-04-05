@@ -84,7 +84,7 @@ void visualizar_linhas(Linha* linhas) {
         printf("Numero de paragens: %d\n", temp->n_paragens);
         printf("Paragens:\n");
         for (int j = 0; j < temp->n_paragens; j++) {
-            printf("- %s\n", temp->paragens[j].nome);
+            printf("- %s\n", temp->paragens[j]->nome);
         }
 
         printf("\n");
