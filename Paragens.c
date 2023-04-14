@@ -20,9 +20,23 @@ void registar_paragem(Paragem** paragens, int* n_paragens) {
         printf("Erro: falha na alocação de memória.\n");
         exit(1);
     }
+    int i;
+    char nome[100];
+    do {
 
-    printf("Digite o nome da paragem: ");
-    scanf("%99[^\n]%*c", (*paragens)[*n_paragens].nome);
+        printf("Digite o nome da paragem: ");
+        scanf("%99[^\n]%*c", nome);
+
+        // Verifica se já existe uma paragem com o mesmo nome
+        for (i = 0; i < *n_paragens; i++) {
+            if (strcmp((*paragens)[i].nome, nome) == 0) {
+                printf("Já existe uma paragem com o nome '%s'. Digite um nome diferente.\n", nome);
+                break;
+            }
+        }
+    } while (i < *n_paragens); // Repete o loop enquanto o nome já existir
+
+    strcpy((*paragens)[*n_paragens].nome, nome); // Copia o nome da nova paragem para a estrutura
 
     // Gera um código aleatório para a paragem
     gerar_codigo_aleatorio((*paragens)[*n_paragens].codigo);
@@ -30,21 +44,30 @@ void registar_paragem(Paragem** paragens, int* n_paragens) {
     // Imprime o código da nova paragem
     printf("Paragem adicionada com sucesso. Codigo: %s\n", (*paragens)[*n_paragens].codigo);
 
-    printf("Paragem registada com sucesso!\n");
+
     (*n_paragens)++;
 }
 
 void remover_paragem(Paragem** paragens, int* n_paragens) {
     char codigo[5];
-    int index = -1;
+    int index;
     if (*n_paragens < 2) {
         printf("Erro: a matriz de paragens nao pode ser reduzida para zero.\n");
         return;
     }
+
     // Solicitar o código da paragem a ser removida
     printf("Digite o codigo da paragem a ser removida: ");
     scanf("%4s", codigo);
 
+    // Procurar a paragem correspondente na matriz de paragens
+    index = procurar_paragem_por_codigo(paragens, *n_paragens, codigo);
+    if (index == -1) {
+        printf("Nao foi encontrada nenhuma paragem com o codigo %s.\n", codigo);
+        return;
+    }
+
+    /*
     // Procurar a paragem correspondente na matriz de paragens
     for (int i = 0; i < *n_paragens; i++) {
         if (strcmp((*paragens)[i].codigo, codigo) == 0) {
@@ -57,7 +80,7 @@ void remover_paragem(Paragem** paragens, int* n_paragens) {
         printf("Nao foi encontrada nenhuma paragem com o codigo %s.\n", codigo);
         return;
     }
-
+*/
     // Deslocar as paragens na matriz após a paragem a ser removida um índice para trás
     for (int i = index; i < *n_paragens - 1; i++) {
         (*paragens)[i] = (*paragens)[i + 1];
@@ -85,4 +108,13 @@ void visualizar_paragens(Paragem* paragens, int n_paragens) {
     for (int i = 0; i < n_paragens; i++) {
         printf("Codigo: %s | Nome: %s\n", paragens[i].codigo, paragens[i].nome);
     }
+}
+
+int procurar_paragem_por_codigo(Paragem** paragens, int n_paragens, char* codigo) {
+    for (int i = 0; i < n_paragens; i++) {
+        if (strcmp((*paragens)[i].codigo, codigo) == 0) {
+            return i;
+        }
+    }
+    return -1;
 }

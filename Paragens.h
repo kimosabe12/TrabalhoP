@@ -12,4 +12,5 @@ void gerar_codigo_aleatorio(char* codigo);
 void registar_paragem(Paragem** paragens, int* n_paragens);
 void remover_paragem(Paragem** paragens, int* n_paragens);
 void visualizar_paragens(Paragem* paragens, int n_paragens);
+int procurar_paragem_por_codigo(Paragem** paragens, int n_paragens, char* codigo);
 #endif //TRABALHOP_PARAGENS_H

@@ -7,6 +7,28 @@ int main() {
     int n_paragens=0;
     Linha* linhas = NULL;
     int n_linhas = 0;
+    // abrir o ficheiro binário para leitura
+    FILE* ficheiro = fopen("metro.bin", "rb+");
+    if(ficheiro == NULL) {
+        printf("Erro ao abrir o ficheiro!\n");
+        return 1;
+    }
+    // ler o número de paragens e a matriz de paragens
+    fread(&n_paragens, sizeof(int), 1, ficheiro);
+    paragens = malloc(n_paragens * sizeof(Paragem));
+    fread(paragens, sizeof(Paragem), n_paragens, ficheiro);
+
+
+    // ler o número de linhas e a lista ligada de linhas
+    fread(&n_linhas, sizeof(int), 1, ficheiro);
+    for(int i=0; i<n_linhas; i++) {
+        Linha* nova_linha = malloc(sizeof(Linha));
+        fread(nova_linha, sizeof(Linha), 1, ficheiro);
+        nova_linha->prox = linhas;
+        linhas = nova_linha;
+    }
+
+
     int verifica=1;
     while (verifica){
         int opcao=0;
@@ -72,9 +94,24 @@ int main() {
                 fflush(stdin);
                 if(opcao4==1){
                     adicionar_linha(&linhas, &n_linhas, paragens, n_paragens);
+                } else if(opcao4==2){
+                    atualiza_linha(&linhas, n_linhas, paragens, n_paragens);
                 }
             }
         }
         }
+    // escrever o número de paragens e a matriz de paragens
+    fwrite(&n_paragens, sizeof(int), 1, ficheiro);
+    fwrite(paragens, sizeof(Paragem), n_paragens, ficheiro);
+
+    // escrever o número de linhas e a lista ligada de linhas
+    fwrite(&n_linhas, sizeof(int), 1, ficheiro);
+    for(Linha* p=linhas; p!=NULL; p=p->prox) {
+        fwrite(p, sizeof(Linha), 1, ficheiro);
+    }
+
+    // fechar o ficheiro
+    fclose(ficheiro);
+
         return 0;
 }
