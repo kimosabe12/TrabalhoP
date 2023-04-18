@@ -7,6 +7,8 @@ int main() {
     int n_paragens=0;
     Linha* linhas = NULL;
     int n_linhas = 0;
+
+
     // abrir o ficheiro binário para leitura
     FILE* ficheiro = fopen("metro.bin", "rb+");
     if(ficheiro == NULL) {
@@ -28,6 +30,8 @@ int main() {
         linhas = nova_linha;
     }
 
+
+    fclose(ficheiro);
 
     int verifica=1;
     while (verifica){
@@ -93,13 +97,51 @@ int main() {
                 scanf("%d", &opcao4);
                 fflush(stdin);
                 if(opcao4==1){
-                    adicionar_linha(&linhas, &n_linhas, paragens, n_paragens);
+                    int opcao;
+                    printf("\n1- Adicionar uma linha manualmente");
+                    printf("\n2- Adicionar uma linha atraves de ficheiro de texto");
+                    printf("\nEscolha uma opcao: ");
+                    scanf("%d", &opcao);
+                    fflush(stdin);
+                    if(opcao==1) {
+                        adicionar_linha(&linhas, &n_linhas, paragens, n_paragens);
+                    }else if(opcao==2){
+                        FILE* ficheiro_2 = fopen("nova_linha.txt", "r");
+                        if(ficheiro == NULL) {
+                            printf("Erro ao abrir o ficheiro!\n");
+                            return 1;
+                        }
+                        // Lê o nome da nova linha
+                        char nome_linha[50];
+                        if(fgets(nome_linha, 50, ficheiro) == NULL) {
+                            printf("Erro ao ler o nome da linha!\n");
+                            return 1;
+                        }
+
+                        nome_linha[strcspn(nome_linha, "\n")] = '\0';
+
+                    }
                 } else if(opcao4==2){
-                    atualiza_linha(&linhas, n_linhas, paragens, n_paragens);
+                    char nome[50];
+                    printf("Digite o nome da linha que deseja atualizar: ");
+                    scanf("%49[^\n]%*c", nome);
+                    for (int i = 0; i < n_linhas; i++) {
+                        if (strcmp(linhas[i].nome, nome) == 0) {
+                            atualiza_linha(&linhas[i], paragens, n_paragens); // retorna 1 se já existe uma linha com esse nome
+                        }
+                    }
+
+                }else{
+                    printf("Opcao Invalida");
                 }
             }
         }
         }
+    ficheiro = fopen("metro.bin", "wb");
+    if(ficheiro == NULL) {
+        printf("Erro ao abrir o ficheiro!\n");
+        return 1;
+    }
     // escrever o número de paragens e a matriz de paragens
     fwrite(&n_paragens, sizeof(int), 1, ficheiro);
     fwrite(paragens, sizeof(Paragem), n_paragens, ficheiro);

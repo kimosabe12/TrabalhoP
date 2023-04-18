@@ -61,7 +61,7 @@ void remover_paragem(Paragem** paragens, int* n_paragens) {
     scanf("%4s", codigo);
 
     // Procurar a paragem correspondente na matriz de paragens
-    index = procurar_paragem_por_codigo(paragens, *n_paragens, codigo);
+    index = procurar_paragem_por_codigo(*paragens, *n_paragens, codigo);
     if (index == -1) {
         printf("Nao foi encontrada nenhuma paragem com o codigo %s.\n", codigo);
         return;
@@ -110,9 +110,9 @@ void visualizar_paragens(Paragem* paragens, int n_paragens) {
     }
 }
 
-int procurar_paragem_por_codigo(Paragem** paragens, int n_paragens, char* codigo) {
+int procurar_paragem_por_codigo(Paragem* paragens, int n_paragens, char* codigo) {
     for (int i = 0; i < n_paragens; i++) {
-        if (strcmp((*paragens)[i].codigo, codigo) == 0) {
+        if (strcmp(paragens[i].codigo, codigo) == 0) {
             return i;
         }
     }
