@@ -18,4 +18,5 @@ int existe_linha(Linha* linhas, int n_linhas, char* nome);
 void visualizar_linhas(Linha* linhas);
 void atualiza_linha(Linha* linha, Paragem* paragens, int n_paragens);
 void adicionar_paragem(Linha* linha, Paragem* paragem);
+void adiciona_linha_txt(Linha** linhas, int *n_linhas,Paragem* paragens, int n_paragens);
 #endif //TRABALHOP_GESTAO_LINHAS_H

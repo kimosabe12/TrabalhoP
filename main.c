@@ -106,10 +106,14 @@ int main() {
                     if(opcao==1) {
                         adicionar_linha(&linhas, &n_linhas, paragens, n_paragens);
                     }else if(opcao==2){
+                       /* char nome_linha[50];
+                        char code[5];
                         FILE* ficheiro_2 = fopen("nova_linha.txt", "r");
-                        if(ficheiro == NULL) {
+                        if(ficheiro_2 == NULL) {
                             printf("Erro ao abrir o ficheiro!\n");
                             return 1;
+                        }else{
+                           // fscanf(ficheiro_2,)
                         }
                         // Lê o nome da nova linha
                         char nome_linha[50];
@@ -119,7 +123,8 @@ int main() {
                         }
 
                         nome_linha[strcspn(nome_linha, "\n")] = '\0';
-
+                        */
+                        adiciona_linha_txt(&linhas, &n_linhas, paragens, n_paragens);
                     }
                 } else if(opcao4==2){
                     char nome[50];
@@ -132,28 +137,42 @@ int main() {
                     }
 
                 }else{
-                    printf("Opcao Invalida");
+                    printf("\nOpcao Invalida");
                 }
+            }
+            case 5: {
+                printf("\nOpcao de Sair escolhida");
+                int opcao5;
+                printf("\nDeseja guardar as paragens criadas?");
+                printf("\n1-Sim");
+                printf("\n2-Nao");
+                scanf("%d", &opcao5);
+                if(opcao5==1){
+                    ficheiro = fopen("metro.bin", "wb");
+                    if(ficheiro == NULL) {
+                        printf("Erro ao abrir o ficheiro!\n");
+                        return 1;
+                    }
+                    // escrever o número de paragens e a matriz de paragens
+                    fwrite(&n_paragens, sizeof(int), 1, ficheiro);
+                    fwrite(paragens, sizeof(Paragem), n_paragens, ficheiro);
+
+                    // escrever o número de linhas e a lista ligada de linhas
+                    fwrite(&n_linhas, sizeof(int), 1, ficheiro);
+                    for(Linha* p=linhas; p!=NULL; p=p->prox) {
+                        fwrite(p, sizeof(Linha), 1, ficheiro);
+                        fclose(ficheiro);
+                    }
+                    return 0;
+                }else {
+                    return 0;
+                }
+
             }
         }
         }
-    ficheiro = fopen("metro.bin", "wb");
-    if(ficheiro == NULL) {
-        printf("Erro ao abrir o ficheiro!\n");
-        return 1;
-    }
-    // escrever o número de paragens e a matriz de paragens
-    fwrite(&n_paragens, sizeof(int), 1, ficheiro);
-    fwrite(paragens, sizeof(Paragem), n_paragens, ficheiro);
-
-    // escrever o número de linhas e a lista ligada de linhas
-    fwrite(&n_linhas, sizeof(int), 1, ficheiro);
-    for(Linha* p=linhas; p!=NULL; p=p->prox) {
-        fwrite(p, sizeof(Linha), 1, ficheiro);
-    }
-
     // fechar o ficheiro
-    fclose(ficheiro);
+    //fclose(ficheiro);
 
         return 0;
 }

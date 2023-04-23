@@ -125,4 +125,57 @@ void atualiza_linha(Linha* linha, Paragem* paragens, int n_paragens) {
     printf("Linha atualizada com sucesso!\n");
 }
 
+void adiciona_linha_txt(Linha** linhas, int *n_linhas,Paragem* paragens, int n_paragens){
+    FILE *ficheiro;
+    char nome_linha[50];
+    char codigo[5];
+    ficheiro= fopen("nova_linha.txt","r");
+    if(ficheiro==NULL){
+        printf("Erro ao abrir o ficheiro");
+    }
+    fgets(nome_linha, 50, ficheiro);
+    nome_linha[strlen(nome_linha) - 1]='\0';
+    if (existe_linha(*linhas, *n_linhas, nome_linha)) {
+        printf("Ja existe uma linha com o nome %s.\n", nome_linha);
+        return;
+    }
+    int n_paragens_linha = 0;
+    char c;
+    while ((c = fgetc(ficheiro)) != EOF) {
+        if (c == '\n') {
+            n_paragens_linha++;
+        }
+    }
+    n_paragens_linha--;
+    Paragem** paragens_linha = (Paragem**) malloc(n_paragens_linha * sizeof(Paragem*));
+    // Ler o código de cada paragem da nova linha e adicioná-la ao array
+    for (int i = 0; i < n_paragens_linha; i++) {
+        fscanf(ficheiro, "%s", codigo);
 
+        // Procurar a paragem correspondente na matriz de paragens
+        int index = procurar_paragem_por_codigo(paragens, n_paragens, codigo);
+        if (index == -1) {
+            printf("Nao foi encontrada nenhuma paragem com o codigo %s.\n", codigo);
+            fclose(ficheiro);
+            return;
+        }
+        paragens_linha[i] = &paragens[index];
+    }
+    // Criar a nova linha e adicioná-la à lista ligada
+    Linha* nova_linha = (Linha*) malloc(sizeof(Linha));
+    strcpy(nova_linha->nome, nome_linha);
+    nova_linha->paragens = paragens_linha;
+    nova_linha->n_paragens = n_paragens_linha;
+    nova_linha->prox = NULL;
+
+    if (*linhas == NULL) {
+        *linhas = nova_linha;
+    } else {
+        Linha* temp = *linhas;
+        while (temp->prox != NULL) {
+            temp = temp->prox;
+        }
+        temp->prox = nova_linha;
+    }
+    (*n_linhas)++;
+}
