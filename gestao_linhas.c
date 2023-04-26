@@ -76,19 +76,28 @@ void visualizar_linhas(Linha* linhas) {
         printf("Nao ha linhas registadas.\n");
         return;
     }
-    printf("Linhas existentes no sistema:\n");
-
-    Linha* temp = linhas;
-    while (temp != NULL) {
-        printf("Nome: %s\n", temp->nome);
-        printf("Numero de paragens: %d\n", temp->n_paragens);
+    int contador = 0;
+    Linha* temp_1 = linhas;
+    while (temp_1 != NULL) {
+        contador++;
+        temp_1 = temp_1->prox;
+    }
+    if(contador==0){
+        printf("\nNao existem linhas no sistema");
+    }else {
+        printf("Linhas existentes no sistema: %d\n", contador);
+    }
+    Linha* temp_2 = linhas;
+    while (temp_2 != NULL) {
+        printf("Nome: %s\n", temp_2->nome);
+        printf("Numero de paragens: %d\n", temp_2->n_paragens);
         printf("Paragens:\n");
-        for (int j = 0; j < temp->n_paragens; j++) {
-            printf("- %s\n", temp->paragens[j]->nome);
+        for (int j = 0; j < temp_2->n_paragens; j++) {
+            printf("- %s\n", temp_2->paragens[j]->codigo);
         }
 
         printf("\n");
-        temp = temp->prox;
+        temp_2 = temp_2->prox;
     }
 }
 
@@ -125,6 +134,34 @@ void atualiza_linha(Linha* linha, Paragem* paragens, int n_paragens) {
     printf("Linha atualizada com sucesso!\n");
 }
 
+void remove_paragem_linha(Linha* linha, Paragem* paragens, int n_paragens) {
+    char codigo[5];
+    int index;
+    printf("Indique o codigo da paragem que pretende remover da linha: ");
+    scanf("%4s", codigo);
+    // Procurar a paragem correspondente na matriz de paragens
+    index = procurar_paragem_por_codigo(paragens, n_paragens,codigo);
+    if(index == -1){
+        printf("Nao foi encontrada nenhuma paragem com o codigo %s.\n", codigo);
+        return;
+    }
+    // Procurar a paragem na lista ligada de paragens da linha
+    for (int i = 0; i < linha->n_paragens; i++) {
+        if (linha->paragens[i] == &paragens[index]) {
+            // Remover a paragem da lista ligada
+            for (int j = i; j < linha->n_paragens - 1; j++) {
+                linha->paragens[j] = linha->paragens[j + 1];
+            }
+            linha->n_paragens--;
+            linha->paragens = realloc(linha->paragens, linha->n_paragens * sizeof(Paragem*));
+            printf("Paragem removida com sucesso!\n");
+            return;
+        }
+    }
+    printf("A paragem com o codigo %s nao foi encontrada na linha.\n", codigo);
+}
+
+
 void adiciona_linha_txt(Linha** linhas, int *n_linhas,Paragem* paragens, int n_paragens){
     FILE *ficheiro;
     char nome_linha[50];
@@ -139,6 +176,7 @@ void adiciona_linha_txt(Linha** linhas, int *n_linhas,Paragem* paragens, int n_p
         printf("Ja existe uma linha com o nome %s.\n", nome_linha);
         return;
     }
+    /*
     int n_paragens_linha = 0;
     char c;
     while ((c = fgetc(ficheiro)) != EOF) {
@@ -147,6 +185,9 @@ void adiciona_linha_txt(Linha** linhas, int *n_linhas,Paragem* paragens, int n_p
         }
     }
     n_paragens_linha--;
+    */
+    int n_paragens_linha;
+    fscanf(ficheiro, "%d", &n_paragens_linha);
     Paragem** paragens_linha = (Paragem**) malloc(n_paragens_linha * sizeof(Paragem*));
     // Ler o código de cada paragem da nova linha e adicioná-la ao array
     for (int i = 0; i < n_paragens_linha; i++) {
@@ -154,11 +195,14 @@ void adiciona_linha_txt(Linha** linhas, int *n_linhas,Paragem* paragens, int n_p
 
         // Procurar a paragem correspondente na matriz de paragens
         int index = procurar_paragem_por_codigo(paragens, n_paragens, codigo);
+        int flag=0;
         if (index == -1) {
+            printf("%d", flag);
             printf("Nao foi encontrada nenhuma paragem com o codigo %s.\n", codigo);
             fclose(ficheiro);
             return;
         }
+        flag++;
         paragens_linha[i] = &paragens[index];
     }
     // Criar a nova linha e adicioná-la à lista ligada

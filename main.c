@@ -21,14 +21,7 @@ int main() {
     fread(paragens, sizeof(Paragem), n_paragens, ficheiro);
 
 
-    // ler o número de linhas e a lista ligada de linhas
-    fread(&n_linhas, sizeof(int), 1, ficheiro);
-    for(int i=0; i<n_linhas; i++) {
-        Linha* nova_linha = malloc(sizeof(Linha));
-        fread(nova_linha, sizeof(Linha), 1, ficheiro);
-        nova_linha->prox = linhas;
-        linhas = nova_linha;
-    }
+
 
 
     fclose(ficheiro);
@@ -128,17 +121,31 @@ int main() {
                     }
                 } else if(opcao4==2){
                     char nome[50];
-                    printf("Digite o nome da linha que deseja atualizar: ");
+                    printf("\nDigite o nome da linha que deseja atualizar: ");
                     scanf("%49[^\n]%*c", nome);
+
                     for (int i = 0; i < n_linhas; i++) {
                         if (strcmp(linhas[i].nome, nome) == 0) {
-                            atualiza_linha(&linhas[i], paragens, n_paragens); // retorna 1 se já existe uma linha com esse nome
+                            int opcao_atualiza;
+                            printf("\nDeseja adicionar ou remover uma paragem? ");
+                            printf("\n1-Adicionar");
+                            printf("\n2-Remover");
+                            scanf("%d",&opcao_atualiza);
+                            fflush(stdin);
+                            if(opcao_atualiza==1){
+                                atualiza_linha(&linhas[i], paragens, n_paragens);
+                            }else if(opcao_atualiza==2){
+                                remove_paragem_linha(&linhas[i], paragens, n_paragens);
+                            }else{
+                                printf("\nOpcao Invalida!");
+                            }
                         }
                     }
 
                 }else{
                     printf("\nOpcao Invalida");
                 }
+                break;
             }
             case 5: {
                 printf("\nOpcao de Sair escolhida");
@@ -146,7 +153,7 @@ int main() {
                 printf("\nDeseja guardar as paragens criadas?");
                 printf("\n1-Sim");
                 printf("\n2-Nao");
-                scanf("%d", &opcao5);
+                scanf("\n%d", &opcao5);
                 if(opcao5==1){
                     ficheiro = fopen("metro.bin", "wb");
                     if(ficheiro == NULL) {
@@ -157,12 +164,6 @@ int main() {
                     fwrite(&n_paragens, sizeof(int), 1, ficheiro);
                     fwrite(paragens, sizeof(Paragem), n_paragens, ficheiro);
 
-                    // escrever o número de linhas e a lista ligada de linhas
-                    fwrite(&n_linhas, sizeof(int), 1, ficheiro);
-                    for(Linha* p=linhas; p!=NULL; p=p->prox) {
-                        fwrite(p, sizeof(Linha), 1, ficheiro);
-                        fclose(ficheiro);
-                    }
                     return 0;
                 }else {
                     return 0;
