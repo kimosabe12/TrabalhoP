@@ -20,4 +20,5 @@ void atualiza_linha(Linha* linha, Paragem* paragens, int n_paragens);
 void remove_paragem_linha(Linha* linha, Paragem* paragens, int n_paragens);
 void adicionar_paragem(Linha* linha, Paragem* paragem);
 void adiciona_linha_txt(Linha** linhas, int *n_linhas,Paragem* paragens, int n_paragens);
+int paragem_pertence_a_linha(Linha* linhas, char* codigo);
 #endif //TRABALHOP_GESTAO_LINHAS_H

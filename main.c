@@ -56,7 +56,22 @@ int main() {
                 if(opcao2==1){
                     registar_paragem(&paragens, &n_paragens);
                 }else if(opcao2==2){
-                    remover_paragem(&paragens, &n_paragens);
+                    char codigo[5];
+                    int index;
+                    // Solicitar o código da paragem a ser removida
+                    printf("Digite o codigo da paragem a ser removida: ");
+                    scanf("%4s", codigo);
+                    index = procurar_paragem_por_codigo(paragens, n_paragens, codigo);
+                    if (index == -1) {
+                        printf("Nao foi encontrada nenhuma paragem com o codigo %s.\n", codigo);
+                        break;
+                    }
+                    if(paragem_pertence_a_linha(linhas,codigo)==1){
+                        printf("Erro: a paragem com o codigo %s pertence a uma linha e nao pode ser removida.\n", codigo);
+                    } else{
+                        remover_paragem(&paragens, &n_paragens);
+
+                    }
                 } else{
                     printf("Opcao invalida");
                 }

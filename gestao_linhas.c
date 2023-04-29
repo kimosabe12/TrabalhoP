@@ -7,8 +7,7 @@
 void adicionar_linha(Linha** linhas, int* n_linhas, Paragem* paragens, int n_paragens) {
     char nome_linha[50];
     printf("Insira o nome da nova linha: ");
-    scanf("%s", nome_linha);
-    fflush(stdin);
+    fgets(nome_linha, 50, stdin);
     nome_linha[strlen(nome_linha)] = '\0';
 
     // Verificar se a linha já existe
@@ -93,7 +92,7 @@ void visualizar_linhas(Linha* linhas) {
         printf("Numero de paragens: %d\n", temp_2->n_paragens);
         printf("Paragens:\n");
         for (int j = 0; j < temp_2->n_paragens; j++) {
-            printf("- %s\n", temp_2->paragens[j]->codigo);
+            printf("- %s\n", temp_2->paragens[j]->nome);
         }
 
         printf("\n");
@@ -222,4 +221,17 @@ void adiciona_linha_txt(Linha** linhas, int *n_linhas,Paragem* paragens, int n_p
         temp->prox = nova_linha;
     }
     (*n_linhas)++;
+}
+
+int paragem_pertence_a_linha(Linha* linhas, char* codigo) {
+    Linha* linha_atual = linhas;
+    while (linha_atual != NULL) {
+        for (int i = 0; i < linha_atual->n_paragens; i++) {
+            if (strcmp(linha_atual->paragens[i]->codigo, codigo) == 0) {
+                return 1;
+            }
+        }
+        linha_atual = linha_atual->prox;
+    }
+    return 0;
 }

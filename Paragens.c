@@ -57,7 +57,7 @@ void remover_paragem(Paragem** paragens, int* n_paragens) {
     }
 
     // Solicitar o código da paragem a ser removida
-    printf("Digite o codigo da paragem a ser removida: ");
+    printf("Digite o codigo da paragem a ser removida novamente: ");
     scanf("%4s", codigo);
 
     // Procurar a paragem correspondente na matriz de paragens
