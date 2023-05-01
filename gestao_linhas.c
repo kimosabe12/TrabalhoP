@@ -175,6 +175,67 @@ void adiciona_linha_txt(Linha** linhas, int *n_linhas,Paragem* paragens, int n_p
         printf("Ja existe uma linha com o nome %s.\n", nome_linha);
         return;
     }
+    // Criar a nova linha
+    Linha* nova_linha = (Linha*) malloc(sizeof(Linha));
+    strcpy(nova_linha->nome, nome_linha);
+    nova_linha->paragens = NULL;
+    nova_linha->n_paragens = 0;
+    nova_linha->prox = NULL;
+
+    // Ler as paragens da linha
+
+    int n_paragens_linha = 0;
+    int i = 0;
+    int encontrou_hashtag = 0;
+    int paragem_existe = 0;
+    Paragem* p;
+    while (1) {
+        int c = fgetc(ficheiro);
+        if (c == '#') {
+            encontrou_hashtag = 1;
+        } else if (c == '\n' || c == EOF) {
+            if (encontrou_hashtag) {
+                codigo[i] = '\0';
+                i = 0;
+                encontrou_hashtag = 0;
+                paragem_existe = 0;
+                for (int j = 0; j < n_paragens; j++) {
+                    if (strcmp(paragens[j].codigo, codigo) == 0) {
+                        p = &paragens[j];
+                        paragem_existe = 1;
+                        break;
+                    }
+                }
+                if (!paragem_existe) {
+                    printf("Nao foi encontrada nenhuma paragem com o codigo %s.\n", codigo);
+                    fclose(ficheiro);
+                    return;
+                }
+                nova_linha->paragens = (Paragem**) realloc(nova_linha->paragens, (nova_linha->n_paragens + 1) * sizeof(Paragem*));
+                nova_linha->paragens[nova_linha->n_paragens] = p;
+                nova_linha->n_paragens++;
+            }
+            if (c == EOF) {
+                break;
+            }
+            n_paragens_linha++;
+        } else if (encontrou_hashtag) {
+            codigo[i++] = (char) c;
+        }
+    }
+
+    // Adicionar a nova linha à lista ligada
+    if (*linhas == NULL) {
+        *linhas = nova_linha;
+    } else {
+        Linha* temp = *linhas;
+        while (temp->prox != NULL) {
+            temp = temp->prox;
+        }
+        temp->prox = nova_linha;
+    }
+    (*n_linhas)++;
+
     /*
     int n_paragens_linha = 0;
     char c;
@@ -185,6 +246,7 @@ void adiciona_linha_txt(Linha** linhas, int *n_linhas,Paragem* paragens, int n_p
     }
     n_paragens_linha--;
     */
+    /*
     int n_paragens_linha;
     fscanf(ficheiro, "%d", &n_paragens_linha);
     Paragem** paragens_linha = (Paragem**) malloc(n_paragens_linha * sizeof(Paragem*));
@@ -204,6 +266,8 @@ void adiciona_linha_txt(Linha** linhas, int *n_linhas,Paragem* paragens, int n_p
         flag++;
         paragens_linha[i] = &paragens[index];
     }
+     */
+    /*
     // Criar a nova linha e adicioná-la à lista ligada
     Linha* nova_linha = (Linha*) malloc(sizeof(Linha));
     strcpy(nova_linha->nome, nome_linha);
@@ -221,6 +285,7 @@ void adiciona_linha_txt(Linha** linhas, int *n_linhas,Paragem* paragens, int n_p
         temp->prox = nova_linha;
     }
     (*n_linhas)++;
+     */
 }
 
 int paragem_pertence_a_linha(Linha* linhas, char* codigo) {
