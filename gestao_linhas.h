@@ -21,4 +21,5 @@ void remove_paragem_linha(Linha* linha, Paragem* paragens, int n_paragens);
 void adicionar_paragem(Linha* linha, Paragem* paragem);
 void adiciona_linha_txt(Linha** linhas, int *n_linhas,Paragem* paragens, int n_paragens);
 int paragem_pertence_a_linha(Linha* linhas, char* codigo);
+Linha* encontrar_linha_por_paragens(Linha* linhas, Paragem* partida, Paragem* chegada);
 #endif //TRABALHOP_GESTAO_LINHAS_H

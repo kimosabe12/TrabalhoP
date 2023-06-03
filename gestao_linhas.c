@@ -300,3 +300,27 @@ int paragem_pertence_a_linha(Linha* linhas, char* codigo) {
     }
     return 0;
 }
+
+
+Linha* encontrar_linha_por_paragens(Linha* linhas, Paragem* partida, Paragem* chegada) {
+    Linha* linha_atual = linhas;
+    while (linha_atual != NULL) {
+        int encontrou_partida = 0;
+        int encontrou_chegada = 0;
+        for (int i = 0; i < linha_atual->n_paragens; i++) {
+            Paragem* paragem_atual = *(linha_atual->paragens + i);
+            if (strcmp(paragem_atual->codigo, partida->codigo) == 0) {
+                encontrou_partida = 1;
+            }
+            if (strcmp(paragem_atual->codigo, chegada->codigo) == 0) {
+                encontrou_chegada = 1;
+            }
+        }
+        if (encontrou_partida && encontrou_chegada) {
+            return linha_atual;
+        }
+        linha_atual = linha_atual->prox;
+    }
+    return NULL; // Não foi encontrada nenhuma linha que ligue a partida e a chegada
+}
+

@@ -44,6 +44,54 @@ int main() {
                 verifica = 0;
         } while (opcao < 0 || opcao > 5);
         switch (opcao) {
+            case 1:{
+
+                    //encontra o caminho ideal para o meu user
+                    printf("\nOpcao 1 escolhida\n");
+                    char partida_nome[50];
+                    char chegada_nome[50];
+                    printf("Qual o nome da paragem de partida: ");
+                    scanf("%s", partida_nome);
+                    printf("Qual o nome da paragem de chegada: ");
+                    scanf("%s", chegada_nome);
+
+                    Paragem* partida = NULL;
+                    Paragem* chegada = NULL;
+
+                    // Encontrar a paragem de partida
+                    for (int i = 0; i < n_paragens; i++) {
+                        if (strcmp(paragens[i].nome, partida_nome) == 0) {
+                            partida = &paragens[i];
+                            break;
+                        }
+                    }
+
+                    // Encontrar a paragem de chegada
+                    for (int i = 0; i < n_paragens; i++) {
+                        if (strcmp(paragens[i].nome, chegada_nome) == 0) {
+                            chegada = &paragens[i];
+                            break;
+                        }
+                    }
+
+                    if (partida == NULL) {
+                        printf("Paragem de partida nao encontrada.\n");
+                        break;
+                    }else if(chegada==NULL){
+                        printf("Paragem de chegada nnao encontrada");
+                        break;
+                    }
+
+                    Linha* linha_encontrada = encontrar_linha_por_paragens(linhas, partida, chegada);
+                    if (linha_encontrada == NULL) {
+                        printf("Nao existe uma linha que ligue a paragem de partida e chegada.\n");
+                        break;
+                    } else {
+                        printf("Linha encontrada: %s\n", linha_encontrada->nome);
+                        break;
+                    }
+
+                }
             case 2:{
                 printf("\nOpcao 2 escolhida\n");
                 int opcao2;
