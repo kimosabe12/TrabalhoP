@@ -13,14 +13,19 @@ struct linha {
     Paragem** paragens;
     Linha* prox;
 };
+typedef struct {
+    Linha* linha;
+    Paragem** paragens;
+    int n_paragens;
+} Etapa;
 
 void adicionar_linha(Linha** linhas, int* n_linhas, Paragem* paragens, int n_paragens);
 int existe_linha(Linha* linhas, int n_linhas, char* nome);
 void visualizar_linhas(Linha* linhas);
 void atualiza_linha(Linha* linha, Paragem* paragens, int n_paragens);
 void remove_paragem_linha(Linha* linha, Paragem* paragens, int n_paragens);
-void adicionar_paragem(Linha* linha, Paragem* paragem);
 void adiciona_linha_txt(Linha** linhas, int *n_linhas,Paragem* paragens, int n_paragens);
 int paragem_pertence_a_linha(Linha* linhas, char* codigo);
-Linha* encontrar_linha_por_paragens(Linha* linhas, Paragem* partida, Paragem* chegada);
+Etapa* encontrar_caminho(Linha* linhas, Paragem* partida, Paragem* chegada, int* n_etapas);
+
 #endif //TRABALHOP_GESTAO_LINHAS_H

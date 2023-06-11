@@ -21,6 +21,11 @@ void adicionar_linha(Linha** linhas, int* n_linhas, Paragem* paragens, int n_par
     int n_paragens_linha;
     printf("Quantas paragens tem a nova linha? ");
     scanf("%d", &n_paragens_linha);
+    if(n_paragens_linha==0){
+        printf("Nao pode existir uma linha com 0 paragens! \n");
+        return;
+    }
+
 
     Paragem** paragens_linha = (Paragem**) malloc(n_paragens_linha * sizeof(Paragem*));
     for (int i = 0; i < n_paragens_linha; i++) {
@@ -236,57 +241,8 @@ void adiciona_linha_txt(Linha** linhas, int *n_linhas,Paragem* paragens, int n_p
         temp->prox = nova_linha;
     }
     (*n_linhas)++;
+    printf("\nA linha foi adicionada com sucesso");
 
-    /*
-    int n_paragens_linha = 0;
-    char c;
-    while ((c = fgetc(ficheiro)) != EOF) {
-        if (c == '\n') {
-            n_paragens_linha++;
-        }
-    }
-    n_paragens_linha--;
-    */
-    /*
-    int n_paragens_linha;
-    fscanf(ficheiro, "%d", &n_paragens_linha);
-    Paragem** paragens_linha = (Paragem**) malloc(n_paragens_linha * sizeof(Paragem*));
-    // Ler o código de cada paragem da nova linha e adicioná-la ao array
-    for (int i = 0; i < n_paragens_linha; i++) {
-        fscanf(ficheiro, "%s", codigo);
-
-        // Procurar a paragem correspondente na matriz de paragens
-        int index = procurar_paragem_por_codigo(paragens, n_paragens, codigo);
-        int flag=0;
-        if (index == -1) {
-            printf("%d", flag);
-            printf("Nao foi encontrada nenhuma paragem com o codigo %s.\n", codigo);
-            fclose(ficheiro);
-            return;
-        }
-        flag++;
-        paragens_linha[i] = &paragens[index];
-    }
-     */
-    /*
-    // Criar a nova linha e adicioná-la à lista ligada
-    Linha* nova_linha = (Linha*) malloc(sizeof(Linha));
-    strcpy(nova_linha->nome, nome_linha);
-    nova_linha->paragens = paragens_linha;
-    nova_linha->n_paragens = n_paragens_linha;
-    nova_linha->prox = NULL;
-
-    if (*linhas == NULL) {
-        *linhas = nova_linha;
-    } else {
-        Linha* temp = *linhas;
-        while (temp->prox != NULL) {
-            temp = temp->prox;
-        }
-        temp->prox = nova_linha;
-    }
-    (*n_linhas)++;
-     */
 }
 
 int paragem_pertence_a_linha(Linha* linhas, char* codigo) {
@@ -301,7 +257,7 @@ int paragem_pertence_a_linha(Linha* linhas, char* codigo) {
     }
     return 0;
 }
-
+/*
 
 Linha* encontrar_linha_por_paragens(Linha* linhas, Paragem* partida, Paragem* chegada) {
     Linha* linha_atual = linhas;
@@ -325,3 +281,64 @@ Linha* encontrar_linha_por_paragens(Linha* linhas, Paragem* partida, Paragem* ch
     return NULL; // Não foi encontrada nenhuma linha que ligue a partida e a chegada
 }
 
+*/
+
+Etapa* encontrar_caminho(Linha* linhas, Paragem* partida, Paragem* chegada, int* n_etapas) {
+    *n_etapas = 0;
+    Linha* linha_atual = linhas;
+    while (linha_atual != NULL) {
+        int encontrou_partida = 0;
+        int indice_partida = -1;
+        for (int i = 0; i < linha_atual->n_paragens; i++) {
+            Paragem* paragem_atual = *(linha_atual->paragens + i);
+            if (strcmp(paragem_atual->codigo, partida->codigo) == 0) {
+                encontrou_partida = 1;
+                indice_partida = i;
+                break;
+            }
+        }
+        if (encontrou_partida) {
+            Linha* linha_atual2 = linhas;
+            while (linha_atual2 != NULL) {
+                int encontrou_chegada = 0;
+                int indice_chegada = -1;
+                for (int i = 0; i < linha_atual2->n_paragens; i++) {
+                    Paragem* paragem_atual = *(linha_atual2->paragens + i);
+                    if (strcmp(paragem_atual->codigo, chegada->codigo) == 0) {
+                        encontrou_chegada = 1;
+                        indice_chegada = i;
+                        break;
+                    }
+                }
+                if (encontrou_chegada) {
+                    for (int i = 0; i < linha_atual->n_paragens; i++) {
+                        Paragem* paragem_atual = *(linha_atual->paragens + i);
+                        for (int j = 0; j < linha_atual2->n_paragens; j++) {
+                            Paragem* paragem_atual2 = *(linha_atual2->paragens + j);
+                            if (strcmp(paragem_atual->codigo, paragem_atual2->codigo) == 0) {
+                                Etapa* etapas = (Etapa*) malloc(2 * sizeof(Etapa));
+                                etapas[0].linha = linha_atual;
+                                etapas[0].n_paragens = i - indice_partida + 1;
+                                etapas[0].paragens = (Paragem**) malloc(etapas[0].n_paragens * sizeof(Paragem*));
+                                for (int k = 0; k < etapas[0].n_paragens; k++) {
+                                    etapas[0].paragens[k] = *(linha_atual->paragens + indice_partida + k);
+                                }
+                                etapas[1].linha = linha_atual2;
+                                etapas[1].n_paragens = indice_chegada - j + 1;
+                                etapas[1].paragens = (Paragem**) malloc(etapas[1].n_paragens * sizeof(Paragem*));
+                                for (int k = 0; k < etapas[1].n_paragens; k++) {
+                                    etapas[1].paragens[k] = *(linha_atual2->paragens + j + k);
+                                }
+                                *n_etapas = 2;
+                                return etapas;
+                            }
+                        }
+                    }
+                }
+                linha_atual2 = linha_atual2->prox;
+            }
+        }
+        linha_atual = linha_atual->prox;
+    }
+    return NULL;
+}

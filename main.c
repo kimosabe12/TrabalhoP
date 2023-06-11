@@ -21,6 +21,36 @@ int main() {
     paragens = malloc(n_paragens * sizeof(Paragem));
     fread(paragens, sizeof(Paragem), n_paragens, ficheiro);
 
+    // ler o número de linhas
+    fread(&n_linhas, sizeof(int), 1, ficheiro);
+    // usar um loop para ler cada linha
+    for (int i = 0; i < n_linhas; i++) {
+        // criar uma nova estrutura Linha e inicializar seus campos
+        Linha* nova_linha = (Linha*) malloc(sizeof(Linha));
+        fread(nova_linha->nome, sizeof(char), 50, ficheiro);
+        fread(&nova_linha->n_paragens, sizeof(int), 1, ficheiro);
+        nova_linha->paragens = (Paragem**) malloc(nova_linha->n_paragens * sizeof(Paragem*));
+        nova_linha->prox = NULL;
+
+        // usar um loop para ler cada paragem da linha
+        for (int j = 0; j < nova_linha->n_paragens; j++) {
+            Paragem* nova_paragem = (Paragem*) malloc(sizeof(Paragem));
+            fread(nova_paragem, sizeof(Paragem), 1, ficheiro);
+            nova_linha->paragens[j] = nova_paragem;
+        }
+
+        // adicionar a nova linha à lista ligada
+        if (linhas == NULL) {
+            linhas = nova_linha;
+        } else {
+            Linha* temp = linhas;
+            while (temp->prox != NULL) {
+                temp = temp->prox;
+            }
+            temp->prox = nova_linha;
+        }
+    }
+
 
 
 
@@ -49,12 +79,12 @@ int main() {
 
                     //encontra o caminho ideal para o meu user
                     printf("\nOpcao 1 escolhida\n");
-                    char partida_nome[50];
-                    char chegada_nome[50];
+                    char partida_nome[100];
+                    char chegada_nome[100];
                     printf("Qual o nome da paragem de partida: ");
-                    scanf("%s", partida_nome);
+                    scanf("%99[^\n]%*c", partida_nome);
                     printf("Qual o nome da paragem de chegada: ");
-                    scanf("%s", chegada_nome);
+                    scanf("%99[^\n]%*c", chegada_nome);
 
                     Paragem* partida = NULL;
                     Paragem* chegada = NULL;
@@ -82,7 +112,7 @@ int main() {
                         printf("Paragem de chegada nnao encontrada");
                         break;
                     }
-
+                    /*
                     Linha* linha_encontrada = encontrar_linha_por_paragens(linhas, partida, chegada);
                     if (linha_encontrada == NULL) {
                         printf("Nao existe uma linha que ligue a paragem de partida e chegada.\n");
@@ -91,8 +121,23 @@ int main() {
                         printf("Linha encontrada: %s\n", linha_encontrada->nome);
                         break;
                     }
-
+                */
+                int n_etapas;
+                Etapa* etapas = encontrar_caminho(linhas, partida, chegada, &n_etapas);
+                if (etapas == NULL) {
+                    printf("Nao foi encontrado um caminho entre as duas paragens.\n");
+                } else {
+                    printf("Caminho encontrado:\n");
+                    for (int i = 0; i < n_etapas; i++) {
+                        printf("Linha: %s\n", etapas[i].linha->nome);
+                        for (int j = 0; j < etapas[i].n_paragens; j++) {
+                            printf("Paragem: %s\n", etapas[i].paragens[j]->nome);
+                        }
+                    }
+                    printf("Chegada: %s\n", chegada_nome);
                 }
+                break;
+            }
             case 2:{
                 printf("\nOpcao 2 escolhida\n");
                 int opcao2;
@@ -214,10 +259,11 @@ int main() {
             case 5: {
                 printf("\nOpcao de Sair escolhida");
                 int opcao5;
-                printf("\nDeseja guardar as paragens criadas?");
+                printf("\nDeseja guardar as paragens e linhas criadas?");
                 printf("\n1-Sim");
                 printf("\n2-Nao");
-                scanf("\n%d", &opcao5);
+                printf("\nEscolha uma opcao: ");
+                scanf("%d", &opcao5);
                 if(opcao5==1){
                     ficheiro = fopen("metro.bin", "wb");
                     if(ficheiro == NULL) {
@@ -227,6 +273,27 @@ int main() {
                     // escrever o número de paragens e a matriz de paragens
                     fwrite(&n_paragens, sizeof(int), 1, ficheiro);
                     fwrite(paragens, sizeof(Paragem), n_paragens, ficheiro);
+
+                    // escrever o número de linhas
+                    fwrite(&n_linhas, sizeof(int), 1, ficheiro);
+                    // percorrer a lista ligada de linhas e escrever cada linha
+                    Linha* linha_atual = linhas;
+                    while (linha_atual != NULL) {
+                        // escrever o nome e o número de paragens da linha
+                        fwrite(linha_atual->nome, sizeof(char), 50, ficheiro);
+                        fwrite(&linha_atual->n_paragens, sizeof(int), 1, ficheiro);
+
+                        // percorrer o vetor de paragens da linha e escrever cada paragem
+                        for (int i = 0; i < linha_atual->n_paragens; i++) {
+                            Paragem* paragem_atual = *(linha_atual->paragens + i);
+                            fwrite(paragem_atual, sizeof(Paragem), 1, ficheiro);
+                        }
+
+                        linha_atual = linha_atual->prox;
+                    }
+
+// fechar o ficheiro
+                    fclose(ficheiro);
 
                     return 0;
                 }else {
