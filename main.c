@@ -208,37 +208,24 @@ int main() {
                     if(opcao==1) {
                         adicionar_linha(&linhas, &n_linhas, paragens, n_paragens);
                     }else if(opcao==2){
-                       /* char nome_linha[50];
-                        char code[5];
-                        FILE* ficheiro_2 = fopen("nova_linha.txt", "r");
-                        if(ficheiro_2 == NULL) {
-                            printf("Erro ao abrir o ficheiro!\n");
-                            return 1;
-                        }else{
-                           // fscanf(ficheiro_2,)
-                        }
-                        // Lê o nome da nova linha
-                        char nome_linha[50];
-                        if(fgets(nome_linha, 50, ficheiro) == NULL) {
-                            printf("Erro ao ler o nome da linha!\n");
-                            return 1;
-                        }
-
-                        nome_linha[strcspn(nome_linha, "\n")] = '\0';
-                        */
                         adiciona_linha_txt(&linhas, &n_linhas, paragens, n_paragens);
                     }
                 } else if(opcao4==2){
                     char nome[50];
-                    printf("\nDigite o nome da linha que deseja atualizar: ");
-                    scanf("%49[^\n]%*c", nome);
+                    printf("Insira o nome da linha que deseja atualizar: ");
+                    fgets(nome, 50, stdin);
+                    nome[strlen(nome)] = '\0';
 
+                    int encontrou_linha = 0;
                     for (int i = 0; i < n_linhas; i++) {
+
                         if (strcmp(linhas[i].nome, nome) == 0) {
+                            encontrou_linha = 1;
                             int opcao_atualiza;
                             printf("\nDeseja adicionar ou remover uma paragem? ");
                             printf("\n1-Adicionar");
                             printf("\n2-Remover");
+                            printf("\nEscolha a opcao: ");
                             scanf("%d",&opcao_atualiza);
                             fflush(stdin);
                             if(opcao_atualiza==1){
@@ -249,11 +236,16 @@ int main() {
                                 printf("\nOpcao Invalida!");
                             }
                         }
+
                     }
 
-                }else{
+                    if (!encontrou_linha) {
+                        printf("Nao existem uma linha com esse nome");
+                    }
+                } else {
                     printf("\nOpcao Invalida");
                 }
+
                 break;
             }
             case 5: {
@@ -303,8 +295,7 @@ int main() {
             }
         }
         }
-    // fechar o ficheiro
-    //fclose(ficheiro);
+
 
         return 0;
 }

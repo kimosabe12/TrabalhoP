@@ -117,7 +117,6 @@ void atualiza_linha(Linha* linha, Paragem* paragens, int n_paragens) {
     scanf("%4s", codigo);
     // Procurar a paragem correspondente na matriz de paragens
     index= procurar_paragem_por_codigo(paragens, n_paragens,codigo);
-    printf("Sai da funcao procurar paragem por codigo");
     if(index==-1){
         printf("Nao foi encontrada nenhuma paragem com o codigo %s.\n", codigo);
         return;
@@ -126,7 +125,7 @@ void atualiza_linha(Linha* linha, Paragem* paragens, int n_paragens) {
     // Procurar a linha correspondente na matriz de linhas
     //Apesar de ja ter garantido que ela existe, temos de armazenar o indice da linha
 
-    printf("A adicionar");
+    printf("\nA adicionar");
     // Adiciona a nova paragem à lista ligada de paragens da linha encontrada
     linha->paragens= realloc(linha->paragens, (++linha->n_paragens)*sizeof(Paragem*));
     if(linha->paragens==NULL){
@@ -136,7 +135,7 @@ void atualiza_linha(Linha* linha, Paragem* paragens, int n_paragens) {
 
     linha->paragens[linha->n_paragens-1]=&paragens[index];
 
-    printf("Linha atualizada com sucesso!\n");
+    printf("\nLinha atualizada com sucesso!\n");
 }
 
 void remove_paragem_linha(Linha* linha, Paragem* paragens, int n_paragens) {
