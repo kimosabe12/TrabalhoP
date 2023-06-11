@@ -242,6 +242,7 @@ void adiciona_linha_txt(Linha** linhas, int *n_linhas,Paragem* paragens, int n_p
     }
     (*n_linhas)++;
     printf("\nA linha foi adicionada com sucesso");
+    fclose(ficheiro);
 
 }
 
