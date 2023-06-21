@@ -20,7 +20,7 @@ typedef struct {
 } Etapa;
 
 void adicionar_linha(Linha** linhas, int* n_linhas, Paragem* paragens, int n_paragens);
-int existe_linha(Linha* linhas, int n_linhas, char* nome);
+int existe_linha(Linha* linhas, char* nome);
 void visualizar_linhas(Linha* linhas);
 void atualiza_linha(Linha* linha, Paragem* paragens, int n_paragens);
 void remove_paragem_linha(Linha* linha, Paragem* paragens, int n_paragens);

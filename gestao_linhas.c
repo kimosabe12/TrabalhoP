@@ -12,7 +12,7 @@ void adicionar_linha(Linha** linhas, int* n_linhas, Paragem* paragens, int n_par
     nome_linha[strlen(nome_linha)] = '\0';
 
     // Verificar se a linha já existe
-    if (existe_linha(*linhas, *n_linhas, nome_linha)) {
+    if (existe_linha(*linhas, nome_linha)) {
         printf("Ja existe uma linha com o nome %s.\n", nome_linha);
         return;
     }
@@ -68,9 +68,9 @@ void adicionar_linha(Linha** linhas, int* n_linhas, Paragem* paragens, int n_par
     }
     (*n_linhas)++;
 }
-int existe_linha(Linha* linhas, int n_linhas, char* nome) {
-    for (int i = 0; i < n_linhas; i++) {
-        if (strcmp(linhas[i].nome, nome) == 0) {
+int existe_linha(Linha* linhas, char* nome) {
+    for (Linha* linha = linhas; linhas; linha = linha->prox) {
+        if (strcmp(linha->nome, nome) == 0) {
             return 1; // retorna 1 se já existe uma linha com esse nome
         }
     }
@@ -176,7 +176,7 @@ void adiciona_linha_txt(Linha** linhas, int *n_linhas,Paragem* paragens, int n_p
     }
     fgets(nome_linha, 50, ficheiro);
     nome_linha[strlen(nome_linha) - 1]='\0';
-    if (existe_linha(*linhas, *n_linhas, nome_linha)) {
+    if (existe_linha(*linhas, nome_linha)) {
         printf("Ja existe uma linha com o nome %s.\n", nome_linha);
         return;
     }

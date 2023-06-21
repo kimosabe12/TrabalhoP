@@ -12,50 +12,53 @@ int main() {
 
     // abrir o ficheiro binário para leitura
     FILE* ficheiro = fopen("metro.bin", "rb+");
-    if(ficheiro == NULL) {
-        printf("Erro ao abrir o ficheiro!\n");
-        return 1;
-    }
-    // ler o número de paragens e a matriz de paragens
-    fread(&n_paragens, sizeof(int), 1, ficheiro);
-    paragens = malloc(n_paragens * sizeof(Paragem));
-    fread(paragens, sizeof(Paragem), n_paragens, ficheiro);
+    if(ficheiro !=NULL) {
 
-    // ler o número de linhas
-    fread(&n_linhas, sizeof(int), 1, ficheiro);
-    // usar um loop para ler cada linha
-    for (int i = 0; i < n_linhas; i++) {
-        // criar uma nova estrutura Linha e inicializar seus campos
-        Linha* nova_linha = (Linha*) malloc(sizeof(Linha));
-        fread(nova_linha->nome, sizeof(char), 50, ficheiro);
-        fread(&nova_linha->n_paragens, sizeof(int), 1, ficheiro);
-        nova_linha->paragens = (Paragem**) malloc(nova_linha->n_paragens * sizeof(Paragem*));
-        nova_linha->prox = NULL;
 
-        // usar um loop para ler cada paragem da linha
-        for (int j = 0; j < nova_linha->n_paragens; j++) {
-            Paragem* nova_paragem = (Paragem*) malloc(sizeof(Paragem));
-            fread(nova_paragem, sizeof(Paragem), 1, ficheiro);
-            nova_linha->paragens[j] = nova_paragem;
-        }
+        // ler o número de paragens e a matriz de paragens
+        fread(&n_paragens, sizeof(int), 1, ficheiro);
+        paragens = malloc(n_paragens * sizeof(Paragem));
+        fread(paragens, sizeof(Paragem), n_paragens, ficheiro);
 
-        // adicionar a nova linha à lista ligada
-        if (linhas == NULL) {
-            linhas = nova_linha;
-        } else {
-            Linha* temp = linhas;
-            while (temp->prox != NULL) {
-                temp = temp->prox;
+        // ler o número de linhas
+        fread(&n_linhas, sizeof(int), 1, ficheiro);
+        // usar um loop para ler cada linha
+        for (int i = 0; i < n_linhas; i++) {
+            // criar uma nova estrutura Linha e inicializar seus campos
+            Linha *nova_linha = (Linha *) malloc(sizeof(Linha));
+            fread(nova_linha->nome, sizeof(char), 50, ficheiro);
+            fread(&nova_linha->n_paragens, sizeof(int), 1, ficheiro);
+            nova_linha->paragens = (Paragem **) malloc(nova_linha->n_paragens * sizeof(Paragem *));
+            nova_linha->prox = NULL;
+
+            // usar um loop para ler cada paragem da linha
+            for (int j = 0; j < nova_linha->n_paragens; j++) {
+                char codigo[5];
+                fread(codigo, sizeof(codigo), 1, ficheiro);
+                int index = procurar_paragem_por_codigo(paragens, n_paragens, codigo);
+                if ( index == -1 )
+                {
+                    printf("ficheiro invalido");
+                    return 1;
+                }
+                nova_linha->paragens[j] = &paragens[index];
             }
-            temp->prox = nova_linha;
+
+            // adicionar a nova linha à lista ligada
+            if (linhas == NULL) {
+                linhas = nova_linha;
+            } else {
+                Linha *temp = linhas;
+                while (temp->prox != NULL) {
+                    temp = temp->prox;
+                }
+                temp->prox = nova_linha;
+            }
         }
+
+
+        fclose(ficheiro);
     }
-
-
-
-
-
-    fclose(ficheiro);
 
     int verifica=1;
     while (verifica){
@@ -217,9 +220,9 @@ int main() {
                     nome[strlen(nome)] = '\0';
 
                     int encontrou_linha = 0;
-                    for (int i = 0; i < n_linhas; i++) {
-
-                        if (strcmp(linhas[i].nome, nome) == 0) {
+                    for (Linha* linha = linhas; linha; linha = linha->prox)
+                    {
+                        if (strcmp(linha->nome, nome) == 0) {
                             encontrou_linha = 1;
                             int opcao_atualiza;
                             printf("\nDeseja adicionar ou remover uma paragem? ");
@@ -229,9 +232,9 @@ int main() {
                             scanf("%d",&opcao_atualiza);
                             fflush(stdin);
                             if(opcao_atualiza==1){
-                                atualiza_linha(&linhas[i], paragens, n_paragens);
+                                atualiza_linha(linha, paragens, n_paragens);
                             }else if(opcao_atualiza==2){
-                                remove_paragem_linha(&linhas[i], paragens, n_paragens);
+                                remove_paragem_linha(linha, paragens, n_paragens);
                             }else{
                                 printf("\nOpcao Invalida!");
                             }
@@ -278,7 +281,7 @@ int main() {
                         // percorrer o vetor de paragens da linha e escrever cada paragem
                         for (int i = 0; i < linha_atual->n_paragens; i++) {
                             Paragem* paragem_atual = *(linha_atual->paragens + i);
-                            fwrite(paragem_atual, sizeof(Paragem), 1, ficheiro);
+                            fwrite(paragem_atual->codigo, sizeof(paragem_atual->codigo), 1, ficheiro);
                         }
 
                         linha_atual = linha_atual->prox;
